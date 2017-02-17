@@ -2,6 +2,7 @@ package com.gargolin.zello;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -54,7 +55,8 @@ import pl.droidsonroids.gif.GifTextView;
 import static android.R.attr.bitmap;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener {
-    File musicFile = null;
+    static File musicFile = null;
+    static File filesDir = null;
     Thread t;
     Button b1;
     private static final String AUDIO_RECORDER_FILE_EXT_3GP = ".3gp";
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     /**
      * Called when the activity is first created.
      */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -87,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         ((ProgressBar) findViewById(R.id.progressBar)).setLongClickable(true);
         ((ProgressBar) findViewById(R.id.progressBar)).setOnTouchListener(this);
-
+        filesDir=getFilesDir();
     }
 
     @Override
@@ -183,126 +190,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             findViewById(R.id.textView).setVisibility(View.GONE);
             recorder.reset();
             recorder.release();
-            MyTask task = new MyTask();
-            findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-            findViewById(R.id.loading).setVisibility(View.VISIBLE);
-            ((GifDrawable) (findViewById(R.id.loading).getBackground())).start();
-
-            task.execute();
             recorder = null;
+           Intent newIntent=new Intent(this, OutputActivity.class);
+            startActivity(newIntent);
+            finish();
+
 
 
         }
     }
 
-    class MyTask extends AsyncTask<Void, Void, Void> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-        HttpURLConnection connection = null;
-        DataOutputStream outputStream = null;
-        DataInputStream inputStream = null;
-        String pathToOurFile = musicFile.getAbsolutePath();
-        String urlServer = "http://sergkolp8384.tmp.fstest.ru/handle_upload.php";
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        File file;
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 100 * 1024 * 1024;
-        int serverResponseCode = 0;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            try {
-
-                FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile));
-
-                URL url = new URL(urlServer);
-                connection = (HttpURLConnection) url.openConnection();
-
-                // Allow Inputs &amp; Outputs.
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
-
-                // Set HTTP method to POST.
-                connection.setRequestMethod("POST");
-
-                connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-
-                outputStream = new DataOutputStream(connection.getOutputStream());
-                outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-                outputStream.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + pathToOurFile + "\"" + lineEnd);
-                outputStream.writeBytes(lineEnd);
-
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
-
-                // Read file
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                while (bytesRead > 0) {
-                    outputStream.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                }
-
-                outputStream.writeBytes(lineEnd);
-                outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-
-                serverResponseCode = connection.getResponseCode();
-                String serverResponseMessage = connection.getResponseMessage();
-
-
-                System.out.println(serverResponseCode); // Should be 200*/
-                connection.disconnect();
-                URL urling = new URL("http://sergkolp8384.tmp.fstest.ru/needed.gif");
-                URLConnection connection = urling.openConnection();
-                connection.connect();
-                file = new File(getFilesDir()+ "/needed.gif");
-                if (file.exists()) file.delete();
-                file.createNewFile();
-                FileUtils.copyURLToFile(urling, file);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            musicFile.delete();
-            if (serverResponseCode == 200) {
-                ((ProgressBar) findViewById(R.id.progressBar)).setProgress(0);
-
-                try {
-                    findViewById(R.id.loading).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.applauds).setVisibility(View.VISIBLE);
-                    ((GifTextView) findViewById(R.id.applauds)).setBackground(new GifDrawable(file));
-
-                    ((GifDrawable) (findViewById(R.id.applauds).getBackground())).start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
 }

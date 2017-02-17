@@ -27,33 +27,6 @@
         android:layout_marginTop="13dp"
         android:id="@+id/textView" />
 
-    <pl.droidsonroids.gif.GifTextView
-        android:id="@+id/loading"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:background="@drawable/loading"
-        android:visibility="invisible"
-        android:layout_above="@+id/applauds"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp" />
-
-    <pl.droidsonroids.gif.GifTextView
-        android:id="@+id/applauds"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/progressBar" />
-
-    <pl.droidsonroids.gif.GifTextView
-
-        android:id="@+id/recoding"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/record_audio"
-        android:visibility="invisible"
-        android:layout_below="@+id/loading"
-        android:layout_alignStart="@+id/progressBar"
-        android:layout_marginTop="15dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -67,5 +40,17 @@
         android:progress="10"
         android:layout_alignTop="@+id/textView"
         android:layout_alignParentStart="true" />
+
+    <pl.droidsonroids.gif.GifTextView
+
+        android:id="@+id/recoding"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/record_audio"
+        android:visibility="invisible"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="18dp" />
 
 </RelativeLayout>
