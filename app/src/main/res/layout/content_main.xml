@@ -14,13 +14,18 @@
     tools:context="com.gargolin.zello.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <pl.droidsonroids.gif.GifTextView
-        android:id="@+id/applauds"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true"
+    <TextView
+        android:text="Voice recorder"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="84dp" />
+        android:layout_marginTop="13dp"
+        android:id="@+id/textView" />
 
     <pl.droidsonroids.gif.GifTextView
         android:id="@+id/loading"
@@ -29,8 +34,15 @@
         android:background="@drawable/loading"
         android:visibility="invisible"
         android:layout_above="@+id/applauds"
-        android:layout_alignStart="@+id/applauds"
-        android:layout_marginStart="23dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp" />
+
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/applauds"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/progressBar" />
 
     <pl.droidsonroids.gif.GifTextView
 
@@ -39,21 +51,9 @@
         android:layout_height="200dp"
         android:background="@drawable/record_audio"
         android:visibility="invisible"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/loading"
         android:layout_alignStart="@+id/progressBar"
-        android:layout_marginBottom="15dp" />
-
-    <TextView
-        android:text="Voice recorder"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:id="@+id/textView" />
+        android:layout_marginTop="15dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -65,7 +65,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:max="1500"
         android:progress="10"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/textView"
         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

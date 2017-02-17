@@ -1,6 +1,7 @@
 package com.gargolin.zello;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import org.apache.commons.io.FileUtils;
@@ -137,9 +140,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private String getFilename() {
-        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        musicFile = new File(file.getAbsolutePath() + "/" + System.currentTimeMillis() + file_exts[currentFormat]);
-        return (file.getAbsolutePath() + "/" + System.currentTimeMillis() + file_exts[currentFormat]);
+
+        musicFile = new File(getFilesDir(), System.currentTimeMillis() + file_exts[currentFormat]);
+        return musicFile.getAbsolutePath();
 
     }
 
@@ -152,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             e.printStackTrace();
         }
         recorder = new MediaRecorder();
+
         recorder.reset();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(output_formats[currentFormat]);
@@ -175,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 recorder.stop();
             } catch (RuntimeException e) {
             }
+           findViewById(R.id.content_main).setBackgroundResource(R.drawable.images);
+            findViewById(R.id.textView).setVisibility(View.GONE);
             recorder.reset();
             recorder.release();
             MyTask task = new MyTask();
@@ -263,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 URL urling = new URL("http://sergkolp8384.tmp.fstest.ru/needed.gif");
                 URLConnection connection = urling.openConnection();
                 connection.connect();
-                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/needed.gif");
+                file = new File(getFilesDir()+ "/needed.gif");
                 if (file.exists()) file.delete();
                 file.createNewFile();
                 FileUtils.copyURLToFile(urling, file);
